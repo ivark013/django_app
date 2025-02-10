@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y libgl1-mesa-glx
 # نسخ ملفات المتطلبات وتثبيت حزم Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN  apt-get update && apt-get install -y $INSTALL_PKG
+
 
 # نسخ باقي ملفات المشروع بعد تثبيت المتطلبات
 COPY . .
