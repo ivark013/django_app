@@ -15,3 +15,5 @@ ENV PORT=8080
 
 # تشغيل Gunicorn لتشغيل Django
 CMD gunicorn servlliance.wsgi --bind 0.0.0.0:$PORT
+
+apt-get update && apt-get install -y $INSTALL_PKGS
