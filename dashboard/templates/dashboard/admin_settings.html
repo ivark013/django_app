@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">إعدادات الإشعارات</h2>
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="email" class="form-label">البريد الإلكتروني للإشعارات</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ settings.email }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="telegram_bot_token" class="form-label">رمز بوت تيليجرام</label>
+            <input type="text" class="form-control" id="telegram_bot_token" name="telegram_bot_token" value="{{ settings.telegram_bot_token }}">
+        </div>
+        <div class="mb-3">
+            <label for="telegram_chat_id" class="form-label">معرف دردشة تيليجرام</label>
+            <input type="text" class="form-control" id="telegram_chat_id" name="telegram_chat_id" value="{{ settings.telegram_chat_id }}">
+        </div>
+        <div class="mb-3">
+            <label for="whatsapp_number" class="form-label">رقم الواتساب</label>
+            <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number" value="{{ settings.whatsapp_number }}">
+        </div>
+        <button type="submit" class="btn btn-primary">حفظ الإعدادات</button>
+    </form>
+</div>
+{% endblock %}
+

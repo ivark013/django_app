@@ -1,0 +1,12 @@
+{% if alerts %}
+    {% for alert in alerts %}
+    <div class="alert-card">
+        <h3>{{ alert.camera.name }}</h3>
+        <p>{{ alert.description }}</p>
+        <span class="alert-time">{{ alert.timestamp|date:"Y-m-d H:i" }}</span>
+    </div>
+    {% endfor %}
+{% else %}
+    <p class="no-alerts">لا توجد تنبيهات حديثة</p>
+{% endif %}
+

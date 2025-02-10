@@ -1,0 +1,64 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}التنبيهات - نظام المراقبة الأمني{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">التنبيهات</h2>
+<div class="row">
+    {% for alert in alerts %}
+    <div class="col-md-6 mb-4">
+        <div class="card {% if not alert.is_read %}border-danger{% endif %}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ alert.camera.name }}</h5>
+                <span class="badge bg-{{ alert.severity }}">{{ alert.get_severity_display }}</span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ alert.description }}</p>
+                <p class="card-text"><small class="text-muted">{{ alert.timestamp|date:"Y-m-d H:i" }}</small></p>
+                {% if alert.image %}
+                <img src="{{ alert.image.url }}" alt="Alert Image" class="img-fluid">
+                {% endif %}
+            </div>
+            {% if not alert.is_read %}
+            <div class="card-footer">
+                <button class="btn btn-sm btn-outline-secondary mark-read-button" data-id="{{ alert.id }}">تحديد كمقروء</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-center">لا توجد تنبيهات</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const markReadButtons = document.querySelectorAll('.mark-read-button');
+    
+    markReadButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const alertId = this.dataset.id;
+            const card = this.closest('.card');
+            
+            fetch(`/mark_alert_read/${alertId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        card.classList.remove('border-danger');
+                        this.closest('.card-footer').remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('حدث خطأ أثناء تحديث حالة التنبيه');
+                });
+        });
+    });
+});
+</script>
+{% endblock %}
+

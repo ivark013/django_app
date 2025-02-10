@@ -1,0 +1,76 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}لوحة التحكم - نظام المراقبة الأمني{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 class="dashboard-title">نظام المراقبة الأمني</h1>
+    <p class="camera-count">الكاميرات المتصلة: <span id="cameraCount">{{ camera_count }}</span></p>
+    
+    <div class="dashboard-content">
+        <div id="cameraGrid" class="camera-grid">
+            {% for camera in cameras %}
+            <div class="camera-card" id="camera-{{ camera.id }}">
+                <h2 class="camera-title">{{ camera.name }}</h2>
+                <div class="camera-feed">
+                    {% if camera.is_active %}
+                    <img src="{% url 'video_feed' camera.id %}" alt="{{ camera.name }}" onerror="handleCameraError('{{ camera.id }}')">
+                    {% else %}
+                    <div class="camera-offline">الكاميرا غير متصلة</div>
+                    {% endif %}
+                </div>
+                <button class="camera-toggle" onclick="toggleCamera('{{ camera.id }}')">
+                    {% if camera.is_active %}إيقاف{% else %}تشغيل{% endif %}
+                </button>
+            </div>
+            {% empty %}
+            <div class="no-cameras">
+                <p>لم يتم العثور على أي كاميرات متصلة. يرجى التحقق من اتصال الكاميرات وتحديث الصفحة.</p>
+                <button onclick="location.reload()" class="refresh-button">تحديث الصفحة</button>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="side-content">
+            <div class="alerts-section">
+                <h2 class="alerts-title">آخر التنبيهات</h2>
+                <div id="alertsList">
+                    {% include 'dashboard/alerts_list.html' %}
+                </div>
+            </div>
+            
+            <div class="notification-settings">
+                <h2 class="settings-title">إعدادات الإشعارات</h2>
+                <form id="notificationForm">
+                    {% csrf_token %}
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="emailNotifications" name="emailNotifications">
+                            تفعيل الإشعارات عبر البريد الإلكتروني
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="telegramNotifications" name="telegramNotifications">
+                            تفعيل الإشعارات عبر تيليجرام
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="whatsappNotifications" name="whatsappNotifications">
+                            تفعيل الإشعارات عبر واتساب
+                        </label>
+                    </div>
+                    <button type="submit" class="save-button">حفظ الإعدادات</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
+
