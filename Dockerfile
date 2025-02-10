@@ -1,5 +1,6 @@
 # استخدام Python 3.9 كبيئة تشغيل
-FROM python:3.9
+FROM python:3.12
+
 
 # تعيين المجلد الرئيسي داخل الحاوية
 WORKDIR /app
